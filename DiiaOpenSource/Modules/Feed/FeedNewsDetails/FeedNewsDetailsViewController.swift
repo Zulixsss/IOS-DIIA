@@ -48,7 +48,7 @@ final class FeedNewsDetailsViewController: UIViewController {
 extension FeedNewsDetailsViewController: FeedNewsDetailsView {
     func configure(with model: DSConstructorModel) {
         if let topGroup = model.topGroup.compactMap({
-            if let topGroup: DSTopGroupOrg = $0.parseValue(forKey: DSTopGroupViewBuilder.modelKey) {
+            if let topGroup: DSTopGroupOrg = $0.parseValue(forKey: Constants.topGroupKey) {
                 return topGroup
             }
             return nil
@@ -80,6 +80,7 @@ extension FeedNewsDetailsViewController: FeedNewsDetailsView {
 
 // MARK: - Constants
 extension FeedNewsDetailsViewController {
-    private enum Constants { 
+    private enum Constants {
+        static let topGroupKey = "topGroupOrg"
     }
 }

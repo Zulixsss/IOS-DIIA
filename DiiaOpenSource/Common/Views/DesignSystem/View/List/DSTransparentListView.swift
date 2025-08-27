@@ -20,7 +20,7 @@ class DSTransparentListView: BaseCodeView {
             addTitleView(title)
             addSeparator()
         }
-        for item in viewModel.items {
+        for item in viewModel.items.value {
             addListItemView(with: item)
         }
     }

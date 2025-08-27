@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/diia-open-source/ios-commonservices.git",
       "state" : {
-        "revision" : "2ac4c4ee7daa7d09ab81d451744273564b638967",
-        "version" : "1.0.11"
+        "revision" : "a6a0efefd3e9eabd2f4f12769b19cd712386bc7e",
+        "version" : "1.0.12"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/diia-open-source/ios-commontypes.git",
       "state" : {
-        "revision" : "dc4322e448dfc63566599dd480e45395368bbe51",
-        "version" : "1.0.19"
+        "revision" : "d9a0b9fb32ec4725d865530a568d562983163118",
+        "version" : "1.0.20"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/diia-open-source/ios-documents.git",
       "state" : {
-        "revision" : "5892c3bf97b47e5290b7349a696726892926259d",
-        "version" : "1.0.17"
+        "revision" : "4d06048a71072506aa7fe3e85e88fa34a304bf02",
+        "version" : "1.0.18"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/diia-open-source/ios-uicomponents.git",
       "state" : {
-        "revision" : "7fe06674419163947400de58ad13f8e469b716b4",
-        "version" : "1.0.15"
+        "revision" : "fa1056e7e28952f90a0d6edf0abeeeffdaf83022",
+        "version" : "1.0.17"
       }
     },
     {
@@ -231,8 +231,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "d72aed98f8253ec1aa9ea1141e28150f408cf17f",
-        "version" : "1.29.0"
+        "revision" : "e3f69fd321d0c9fcdc16fb576a0cdd956675face",
+        "version" : "1.31.0"
       }
     },
     {

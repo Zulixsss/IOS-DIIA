@@ -52,7 +52,7 @@ final class FeedNewsViewController: UIViewController {
 extension FeedNewsViewController: FeedNewsView {
     func configure(with model: DSConstructorModel) {
         if let topGroup = model.topGroup.compactMap({
-            if let topGroup: DSTopGroupOrg = $0.parseValue(forKey: DSTopGroupViewBuilder.modelKey) {
+            if let topGroup: DSTopGroupOrg = $0.parseValue(forKey: Constants.topGroupKey) {
                 return topGroup
             }
             return nil
@@ -90,5 +90,6 @@ extension FeedNewsViewController {
     private enum Constants {
         static let cardHeight: CGFloat = UIScreen.main.bounds.width * 0.51
         static let cardInsets = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        static let topGroupKey = "topGroupOrg"
     }
 }

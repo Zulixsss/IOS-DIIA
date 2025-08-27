@@ -4,8 +4,10 @@ import DiiaCommonTypes
 import DiiaCommonServices
 
 class PaymentManager: NSObject, PaymentManagerProtocol {
-    func startPayment(_ paymentRequest: PaymentRequestModel, in view: BaseView, callback: @escaping (AlertTemplateAction) -> Void) {
-        TemplateHandler.handle(Constants.notImplementedAlert, in: view, callback: callback)
+    func startPayment(_ paymentRequest: DiiaCommonTypes.PaymentRequestModel, in view: any DiiaMVPModule.BaseView, callback: @escaping (DiiaCommonServices.PaymentResult) -> Void) {
+        TemplateHandler.handle(Constants.notImplementedAlert, in: view, callback: { action in
+            callback(.template(action: action))
+        })
     }
     
     private enum Constants {

@@ -17,11 +17,11 @@ class FeedOfflineModeConstructor {
         
         return DSConstructorModel(
             topGroup: [
-                AnyCodable.dictionary([DSTopGroupViewBuilder.modelKey:
+                AnyCodable.dictionary([Constants.topGroupKey:
                                         AnyCodable.fromEncodable(encodable: DSTopGroupOrg(titleGroupMlc: .init(heroText: welcomeTitle)))])
             ],
             body: [
-                AnyCodable.dictionary([DSButtonIconRoundedGroupBuilder.modelKey: AnyCodable.fromEncodable(encodable: buttonGroup)])
+                AnyCodable.dictionary([Constants.btnGroupKey: AnyCodable.fromEncodable(encodable: buttonGroup)])
             ],
             bottomGroup: nil,
             ratingForm: nil
@@ -46,5 +46,7 @@ extension FeedOfflineModeConstructor {
         static let failedConnectionAction = "failedConnection"
         static let militaryBondsAction = "militaryBonds"
         static let enemyTrackAction = "enemyTrack"
+        static let topGroupKey = "topGroupOrg"
+        static let btnGroupKey = "btnIconRoundedGroupOrg"
     }
 }
