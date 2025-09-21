@@ -1,42 +1,72 @@
-name: Build unsigned IPA (trial)
+name: Build unsigned IPA
+
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: macos-latest
+    timeout-minutes: 60
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Show files
-        run: ls -la
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Show repo (debug)
+        run: |
+          echo "Files in repo root:"
+          ls -la
+          echo "Check xcodeproj folder:"
+          ls -la DiiaOpenSource.xcodeproj || true
+          echo "Check schemes folder:"
+          ls -la DiiaOpenSource.xcodeproj/xcshareddata/xcschemes || true
+
+      - name: Install CocoaPods (if needed)
+        run: |
+          if command -v pod >/dev/null 2>&1; then pod --version; else sudo gem install cocoapods -v 1.11.3 || sudo gem install cocoapods; fi
+
+      - name: Install pods if Podfile exists
+        run: |
+          if [ -f "Podfile" ]; then pod install --repo-update; elif [ -f "DiiaOpenSource/Podfile" ]; then cd DiiaOpenSource && pod install --repo-update && cd -; else echo "No Podfile"; fi
 
       - name: Resolve SPM packages
-        run: swift package resolve || true
-
-      - name: Try to build archive
         run: |
+          xcodebuild -project DiiaOpenSource.xcodeproj -resolvePackageDependencies || true
+
+      - name: Clean build folder
+        run: |
+          rm -rf build || true
           mkdir -p build
-          # adjust project path/scheme if needed
-          xcodebuild -project DiiaOpenSource.xcodeproj -scheme DiiaDev -configuration Release -sdk iphoneos -archivePath ./build/Diia.xcarchive archive || true
 
-      - name: Try export unsigned IPA
+      - name: Archive (unsigned)
         run: |
-          mkdir -p ./build/export
-          # attempt export; if fails, action still continues to let you see logs
-          xcodebuild -exportArchive -archivePath ./build/Diia.xcarchive -exportPath ./build/export -exportOptionsPlist ./ExportOptions.plist || true
+          set -o pipefail
+          xcodebuild -project DiiaOpenSource.xcodeproj \
+            -scheme DiiaDev \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            -archivePath $GITHUB_WORKSPACE/build/Diia.xcarchive clean archive 2>&1 | tee $GITHUB_WORKSPACE/build/xcodebuild-archive.log
 
-      - name: Pack whatever is in build/export
+      - name: Package unsigned .ipa
         run: |
-          ls -la build || true
-          ls -la build/export || true
-          tar -czf diia-build.tar.gz build || true
+          mkdir -p $GITHUB_WORKSPACE/build/export
+          APP=$(ls -d $GITHUB_WORKSPACE/build/Diia.xcarchive/Products/Applications/*.app || true)
+          if [ -z "$APP" ]; then echo "APP not found. Archive listing:" && ls -la $GITHUB_WORKSPACE/build/Diia.xcarchive || true && exit 1; fi
+          mkdir -p $GITHUB_WORKSPACE/build/export/Payload
+          cp -R "$APP" $GITHUB_WORKSPACE/build/export/Payload/
+          cd $GITHUB_WORKSPACE/build/export
+          zip -r ../Diia-unsigned.ipa Payload
+          cd $GITHUB_WORKSPACE
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact (IPA)
+        uses: actions/upload-artifact@v3
         with:
-          name: diia-build
-          path: |
-            build/export
-            diia-build.tar.gz
+          name: Diia-unsigned-ipa
+          path: build/Diia-unsigned.ipa
+
