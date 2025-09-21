@@ -1,0 +1,42 @@
+name: Build unsigned IPA (trial)
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show files
+        run: ls -la
+
+      - name: Resolve SPM packages
+        run: swift package resolve || true
+
+      - name: Try to build archive
+        run: |
+          mkdir -p build
+          # adjust project path/scheme if needed
+          xcodebuild -project DiiaOpenSource.xcodeproj -scheme DiiaDev -configuration Release -sdk iphoneos -archivePath ./build/Diia.xcarchive archive || true
+
+      - name: Try export unsigned IPA
+        run: |
+          mkdir -p ./build/export
+          # attempt export; if fails, action still continues to let you see logs
+          xcodebuild -exportArchive -archivePath ./build/Diia.xcarchive -exportPath ./build/export -exportOptionsPlist ./ExportOptions.plist || true
+
+      - name: Pack whatever is in build/export
+        run: |
+          ls -la build || true
+          ls -la build/export || true
+          tar -czf diia-build.tar.gz build || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diia-build
+          path: |
+            build/export
+            diia-build.tar.gz
